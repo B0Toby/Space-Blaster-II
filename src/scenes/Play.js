@@ -40,7 +40,9 @@ class Play extends Phaser.Scene {
         this.sfx = {
             explosions: [
                 this.sound.add("explosion1"),
-                this.sound.add("explosion2")
+                this.sound.add("explosion2"),
+                this.sound.add("explosion3"),
+                this.sound.add("explosion4")
             ],
             laser: this.sound.add("shot")
         }
@@ -70,7 +72,7 @@ class Play extends Phaser.Scene {
                 let enemy = null
 
                 if (Phaser.Math.Between(0, 10) >= 3) {
-                    enemy = new GunShip(
+                    enemy = new ShooterShip(
                         this,
                         Phaser.Math.Between(0, this.game.config.width),
                         0

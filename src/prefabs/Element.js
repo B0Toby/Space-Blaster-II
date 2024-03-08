@@ -1,4 +1,4 @@
-class Object extends Phaser.GameObjects.Sprite {
+class Element extends Phaser.GameObjects.Sprite {Object
     constructor(scene, x, y, key, type) {
         super(scene, x, y, key)
 
@@ -34,7 +34,7 @@ class Object extends Phaser.GameObjects.Sprite {
     }
 }
 
-class Player extends Object {
+class Player extends Element {
     constructor(scene, x, y, key) {
         super(scene, x, y, key, "Player")
 
@@ -88,21 +88,21 @@ class Player extends Object {
     }
 }
 
-class PlayerLaser extends Object {
+class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "playerLaser")
         this.body.velocity.y = -200
     }
 }
 
-class EnemyLaser extends Object {
+class EnemyLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "enemyLaser")
         this.body.velocity.y = 200
     }
 }
 
-class ChaserShip extends Object {
+class ChaserShip extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "enemyShip1", "ChaserShip")
 
@@ -150,9 +150,9 @@ class ChaserShip extends Object {
     }
 }
 
-class GunShip extends Object {
+class ShooterShip extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "enemyShip2", "GunShip")
+        super(scene, x, y, "enemyShip2", "ShooterShip")
         this.play("enemyShip2")
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
@@ -182,7 +182,7 @@ class GunShip extends Object {
     }
 }
 
-class CarrierShip extends Object {
+class CarrierShip extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "enemyShip3", "CarrierShip")
         this.play("enemyShip3")

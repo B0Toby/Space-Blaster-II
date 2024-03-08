@@ -6,8 +6,10 @@ class Load extends Phaser.Scene {
     preload() {
         this.load.path = './assets/'
         // audio
-        this.load.audio("explosion1", "audio/explosion1.wav")
-        this.load.audio("explosion2", "audio/explosion2.wav")
+        this.load.audio("explosion1", "audio/sfx-explosion1.wav")
+        this.load.audio("explosion2", "audio/sfx-explosion2.wav")
+        this.load.audio("explosion3", "audio/sfx-explosion3.wav")
+        this.load.audio("explosion4", "audio/sfx-explosion4.wav")
         this.load.audio("shot", "audio/shot.wav")
 
         // img
