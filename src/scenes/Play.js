@@ -10,6 +10,8 @@ class Play extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        this.cameras.main.setBounds(0, 0, this.game.config.width, this.game.config.height)
+
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
         this.anims.create({
@@ -44,8 +46,10 @@ class Play extends Phaser.Scene {
                 this.sound.add("explosion3"),
                 this.sound.add("explosion4")
             ],
-            laser: this.sound.add("shot")
+            laser: this.sound.add("shot"),
         }
+
+        
 
         this.player = new Player(
             this,
@@ -53,7 +57,7 @@ class Play extends Phaser.Scene {
             this.game.config.height * 0.5,
             "playerShip"
         )
-        console.log(this.player)
+        // console.log(this.player)
 
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
@@ -65,6 +69,14 @@ class Play extends Phaser.Scene {
         this.enemies = this.add.group()
         this.enemyLasers = this.add.group()
         this.playerLasers = this.add.group()
+        this.coins = this.add.group()
+
+        this.coinSpawnTimer = this.time.addEvent({
+            delay: Phaser.Math.Between(12500, 17500),
+            callback: this.spawnCoin,
+            callbackScope: this,
+            loop: true
+        })
 
         this.time.addEvent({
             delay: 1000,
@@ -145,6 +157,19 @@ class Play extends Phaser.Scene {
         return arr
     }
 
+    spawnCoin() {
+        let x = Phaser.Math.Between(0, this.game.config.width)
+        let coin = new Coin(this, x, 0)
+        this.coins.add(coin)
+    }
+
+    collectCoin(player, coin) {
+        coin.destroy()
+        player.enhanceFireRate()
+        this.sound.play("coin")
+        // this.cameras.main.shake(150, 0.01)
+    }
+
     update() {
 
         if (!this.player.getData("isDead")) {
@@ -170,6 +195,12 @@ class Play extends Phaser.Scene {
                 this.player.setData("isShooting", false)
             }
         }
+
+        if (this.player.getData("isDead")) {
+            this.cameras.main.shake(100, 0.01)
+        }
+
+        this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)
 
         for (let i = 0; i < this.enemies.getChildren().length; i++) {
             let enemy = this.enemies.getChildren()[i]

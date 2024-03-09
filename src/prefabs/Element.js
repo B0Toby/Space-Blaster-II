@@ -43,6 +43,8 @@ class Player extends Element {
         this.setData("isShooting", false)
         this.setData("timerShootDelay", 50)
         this.setData("timerShootTick", this.getData("timerShootDelay") - 1)
+
+        this.isPowerUpActive = false
     }
 
     moveUp() {
@@ -56,6 +58,18 @@ class Player extends Element {
     }
     moveRight() {
         this.body.velocity.x = this.getData("speed")
+    }
+
+    enhanceFireRate() {
+        if(this.isPowerUpActive) return // Avoid stacking power-ups
+
+        this.setData("timerShootDelay", 25) // Decrease delay for faster shooting
+        this.isPowerUpActive = true
+
+        this.scene.time.delayedCall(10000, () => {
+            this.setData("timerShootDelay", 50) // Reset to original delay
+            this.isPowerUpActive = false
+        })
     }
 
     onDestroy() {
@@ -91,7 +105,7 @@ class Player extends Element {
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "playerLaser")
-        this.body.velocity.y = -200
+        this.body.velocity.y = -300
     }
 }
 
@@ -140,10 +154,10 @@ class ChaserShip extends Element {
                 )
 
                 if (this.x < this.scene.player.x) {
-                    this.angle -= 4
+                    this.angle -= 6
                 }
                 else {
-                    this.angle += 4
+                    this.angle += 6
                 } 
             }
         }
@@ -186,6 +200,14 @@ class CarrierShip extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "enemyShip3", "CarrierShip")
         this.play("enemyShip3")
+
+        this.body.velocity.y = Phaser.Math.Between(50, 100)
+    }
+}
+
+class Coin extends Element {
+    constructor(scene, x, y) {
+        super(scene, x, y, "coin", "Coin")
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
     }
