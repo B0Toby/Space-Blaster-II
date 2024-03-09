@@ -72,7 +72,7 @@ class Play extends Phaser.Scene {
         this.coins = this.add.group()
 
         this.coinSpawnTimer = this.time.addEvent({
-            delay: Phaser.Math.Between(12500, 17500),
+            delay: Phaser.Math.Between(15000, 20000),
             callback: this.spawnCoin,
             callbackScope: this,
             loop: true

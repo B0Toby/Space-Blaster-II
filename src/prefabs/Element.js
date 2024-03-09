@@ -63,7 +63,7 @@ class Player extends Element {
     enhanceFireRate() {
         if(this.isPowerUpActive) return // Avoid stacking power-ups
 
-        this.setData("timerShootDelay", 25) // Decrease delay for faster shooting
+        this.setData("timerShootDelay", 20) // Decrease delay for faster shooting
         this.isPowerUpActive = true
 
         this.scene.time.delayedCall(10000, () => {
@@ -209,6 +209,6 @@ class Coin extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, "coin", "Coin")
 
-        this.body.velocity.y = Phaser.Math.Between(50, 100)
+        this.body.velocity.y = Phaser.Math.Between(75, 100)
     }
 }
