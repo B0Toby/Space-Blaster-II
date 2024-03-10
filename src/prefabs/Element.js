@@ -37,8 +37,8 @@ class Element extends Phaser.GameObjects.Sprite {Object
 class Player extends Element {
     constructor(scene, x, y, key) {
         super(scene, x, y, key, 'Player')
-
-        this.setData('speed', 300)
+        this.body.setCollideWorldBounds(true)
+        this.setData('speed', 250)
 
         this.setData('isShooting', false)
         this.setData('timerShootDelay', 50)
@@ -105,7 +105,7 @@ class Player extends Element {
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'playerLaser')
-        this.body.velocity.y = -300
+        this.body.velocity.y = -250
     }
 }
 

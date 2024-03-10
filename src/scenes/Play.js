@@ -53,7 +53,8 @@ class Play extends Phaser.Scene {
         }
 
         // Score
-        this.add.bitmapText(this.game.config.width-120, this.game.config.height -40, 'arcade', '0000', 48).setOrigin(0.5)
+        this.score = 0
+        this.scoreText = this.add.bitmapText(this.game.config.width - 120, this.game.config.height - 40, 'arcade', this.score.toString().padStart(4, '0'), 48).setOrigin(0.5)
 
         this.player = new Player(
             this,
@@ -120,34 +121,6 @@ class Play extends Phaser.Scene {
             callbackScope: this,
             loop: true
         })
-
-        this.physics.add.collider(this.playerLasers, this.enemies, function (playerLaser, enemy) {
-            if (enemy) {
-                if (enemy.onDestroy !== undefined) {
-                    enemy.onDestroy()
-                }
-                enemy.explode(true)
-                playerLaser.destroy()
-            }
-        })
-
-        this.physics.add.overlap(this.player, this.enemies, function (player, enemy) {
-            if (!player.getData('isDead') &&
-                !enemy.getData('isDead')) {
-                player.explode(false)
-                player.onDestroy()
-                enemy.explode(true)
-            }
-        })
-
-        this.physics.add.overlap(this.player, this.enemyLasers, function (player, laser) {
-            if (!player.getData('isDead') &&
-                !laser.getData('isDead')) {
-                player.explode(false)
-                player.onDestroy()
-                laser.destroy()
-            }
-        })
     }
 
     getEnemiesByType(type) {
@@ -171,7 +144,28 @@ class Play extends Phaser.Scene {
         coin.destroy()
         player.enhanceFireRate()
         this.sound.play('coin')
-        // this.cameras.main.shake(150, 0.01)
+        // flash effect when collect coin
+        let flashCount = 0
+        let isTinted = false
+        let flashEvent = this.time.addEvent({
+            delay: 100,
+            callback: () => {
+                if (isTinted) {
+                    player.clearTint()
+                    isTinted = false
+                } else {
+                    player.setTintFill(0xFFFFFF)
+                    isTinted = true
+                }
+                flashCount += 1
+                if (flashCount >= 10) {
+                    flashEvent.remove()
+                    player.clearTint()
+                }
+            },
+            callbackScope: this,
+            loop: true
+        })
     }
 
     update() {
@@ -200,13 +194,43 @@ class Play extends Phaser.Scene {
             }
         }
 
+        this.physics.add.collider(this.playerLasers, this.enemies, function (playerLaser, enemy) {
+            if (enemy) {
+                if (enemy.onDestroy !== undefined) {
+                    enemy.onDestroy()
+                }
+                enemy.explode(true)
+                playerLaser.destroy()
+                this.score += 1
+                this.scoreText.setText(this.score.toString().padStart(4, '0'))
+            }
+        }, null, this)
+
+        this.physics.add.overlap(this.player, this.enemies, function (player, enemy) {
+            if (!player.getData('isDead') &&
+                !enemy.getData('isDead')) {
+                player.explode(false)
+                player.onDestroy()
+                enemy.explode(true)
+            }
+        })
+
+        this.physics.add.overlap(this.player, this.enemyLasers, function (player, laser) {
+            if (!player.getData('isDead') &&
+                !laser.getData('isDead')) {
+                player.explode(false)
+                player.onDestroy()
+                laser.destroy()
+            }
+        })
+
+        this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)
+
         // gg
         if (this.player.getData('isDead')) {
             this.cameras.main.shake(7, 0.015)
             this.bgmusic.stop()
         }
-
-        this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)
 
         for (let i = 0; i < this.enemies.getChildren().length; i++) {
             let enemy = this.enemies.getChildren()[i]
@@ -222,6 +246,8 @@ class Play extends Phaser.Scene {
                         enemy.onDestroy()
                     }
                     enemy.destroy()
+                    this.score--
+                    this.scoreText.setText(this.score.toString().padStart(4, '0'))
                 }
             }
         }
