@@ -10,6 +10,9 @@ class Play extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        this.bgmusic = this.sound.add('bgmusic', { volume: 0.5, loop: true })
+        this.bgmusic.play()
+
         this.cameras.main.setBounds(0, 0, this.game.config.width, this.game.config.height)
 
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
@@ -197,8 +200,10 @@ class Play extends Phaser.Scene {
             }
         }
 
+        // gg
         if (this.player.getData('isDead')) {
             this.cameras.main.shake(7, 0.015)
+            this.bgmusic.stop()
         }
 
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)

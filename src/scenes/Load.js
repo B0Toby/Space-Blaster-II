@@ -9,6 +9,7 @@ class Load extends Phaser.Scene {
         this.load.bitmapFont('arcade', 'font/Arcade.png', 'font/Arcade.xml')
 
         // audio
+        this.load.audio('bgmusic', 'audio/bgm.wav')
         this.load.audio('explosion1', 'audio/sfx-explosion1.wav')
         this.load.audio('explosion2', 'audio/sfx-explosion2.wav')
         this.load.audio('explosion3', 'audio/sfx-explosion3.wav')
