@@ -5,14 +5,14 @@ class Element extends Phaser.GameObjects.Sprite {Object
         this.scene = scene
         this.scene.add.existing(this)
         this.scene.physics.world.enableBody(this, 0)
-        this.setData("type", type)
-        this.setData("isDead", false)
+        this.setData('type', type)
+        this.setData('isDead', false)
     }
 
     explode(canDestroy) {
-        if (!this.getData("isDead")) {
-            this.setTexture("explosion1")
-            this.play("explosion1")
+        if (!this.getData('isDead')) {
+            this.setTexture('explosion1')
+            this.play('explosion1')
             this.scene.sfx.explosions[Phaser.Math.Between(0, this.scene.sfx.explosions.length - 1)].play()
             if (this.shootTimer !== undefined) {
                 if (this.shootTimer) {
@@ -29,45 +29,45 @@ class Element extends Phaser.GameObjects.Sprite {Object
                     this.setVisible(false)
                 }
             }, this)
-            this.setData("isDead", true)
+            this.setData('isDead', true)
         }
     }
 }
 
 class Player extends Element {
     constructor(scene, x, y, key) {
-        super(scene, x, y, key, "Player")
+        super(scene, x, y, key, 'Player')
 
-        this.setData("speed", 300)
+        this.setData('speed', 300)
 
-        this.setData("isShooting", false)
-        this.setData("timerShootDelay", 50)
-        this.setData("timerShootTick", this.getData("timerShootDelay") - 1)
+        this.setData('isShooting', false)
+        this.setData('timerShootDelay', 50)
+        this.setData('timerShootTick', this.getData('timerShootDelay') - 1)
 
         this.isPowerUpActive = false
     }
 
     moveUp() {
-        this.body.velocity.y = -this.getData("speed")
+        this.body.velocity.y = -this.getData('speed')
     }
     moveDown() {
-        this.body.velocity.y = this.getData("speed")
+        this.body.velocity.y = this.getData('speed')
     }
     moveLeft() {
-        this.body.velocity.x = -this.getData("speed")
+        this.body.velocity.x = -this.getData('speed')
     }
     moveRight() {
-        this.body.velocity.x = this.getData("speed")
+        this.body.velocity.x = this.getData('speed')
     }
 
     enhanceFireRate() {
         if(this.isPowerUpActive) return // Avoid stacking power-ups
 
-        this.setData("timerShootDelay", 20) // Decrease delay for faster shooting
+        this.setData('timerShootDelay', 20) // Decrease delay for faster shooting
         this.isPowerUpActive = true
 
         this.scene.time.delayedCall(10000, () => {
-            this.setData("timerShootDelay", 50) // Reset to original delay
+            this.setData('timerShootDelay', 50) // Reset to original delay
             this.isPowerUpActive = false
         })
     }
@@ -76,7 +76,7 @@ class Player extends Element {
         this.scene.time.addEvent({
             delay: 1000,
             callback: function () {
-                this.scene.scene.start("gameOverScene")
+                this.scene.scene.start('gameOverScene')
             },
             callbackScope: this,
             loop: false
@@ -88,15 +88,15 @@ class Player extends Element {
         this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.config.width)
         this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.config.height)
 
-        if (this.getData("isShooting")) {
-            if (this.getData("timerShootTick") < this.getData("timerShootDelay")) {
-                this.setData("timerShootTick", this.getData("timerShootTick") + 1)
+        if (this.getData('isShooting')) {
+            if (this.getData('timerShootTick') < this.getData('timerShootDelay')) {
+                this.setData('timerShootTick', this.getData('timerShootTick') + 1)
             }
             else {
                 let laser = new PlayerLaser(this.scene, this.x, this.y)
                 this.scene.playerLasers.add(laser)
                 this.scene.sfx.laser.play()
-                this.setData("timerShootTick", 0)
+                this.setData('timerShootTick', 0)
             }
         }
     }
@@ -104,33 +104,33 @@ class Player extends Element {
 
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "playerLaser")
+        super(scene, x, y, 'playerLaser')
         this.body.velocity.y = -300
     }
 }
 
 class EnemyLaser extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "enemyLaser")
+        super(scene, x, y, 'enemyLaser')
         this.body.velocity.y = 200
     }
 }
 
 class ChaserShip extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "enemyShip1", "ChaserShip")
+        super(scene, x, y, 'enemyShip1', 'ChaserShip')
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
 
         this.states = {
-            MOVE_DOWN: "MOVE_DOWN",
-            CHASE: "CHASE"
+            MOVE_DOWN: 'MOVE_DOWN',
+            CHASE: 'CHASE'
         }
         this.state = this.states.MOVE_DOWN
     }
 
     update() {
-        if (!this.getData("isDead") && this.scene.player) {
+        if (!this.getData('isDead') && this.scene.player) {
             if (Phaser.Math.Distance.Between(
                 this.x,
                 this.y,
@@ -166,13 +166,13 @@ class ChaserShip extends Element {
 
 class ShooterShip extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "enemyShip2", "ShooterShip")
-        this.play("enemyShip2")
+        super(scene, x, y, 'enemyShip2', 'ShooterShip')
+        this.play('enemyShip2')
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
 
         this.shootTimer = this.scene.time.addEvent({
-            delay: 1000,
+            delay: Phaser.Math.Between(500,2000),
             callback: function () {
                 let laser = new EnemyLaser(
                     this.scene,
@@ -198,8 +198,8 @@ class ShooterShip extends Element {
 
 class CarrierShip extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "enemyShip3", "CarrierShip")
-        this.play("enemyShip3")
+        super(scene, x, y, 'enemyShip3', 'CarrierShip')
+        this.play('enemyShip3')
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
     }
@@ -207,7 +207,7 @@ class CarrierShip extends Element {
 
 class Coin extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, "coin", "Coin")
+        super(scene, x, y, 'coin', 'Coin')
 
         this.body.velocity.y = Phaser.Math.Between(75, 100)
     }

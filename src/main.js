@@ -1,13 +1,13 @@
 let config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 550,
+    width: 750,
+    height: 540,
     scale: {
         // mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     pixelArt: true,
-    zoom: 1,
+    zoom: 1.6,
     physics: {
         default: "arcade",
         arcade: {

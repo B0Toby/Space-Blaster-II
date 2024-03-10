@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     constructor() {
-        super("playScene")
+        super('playScene')
     }
 
     create() {
@@ -15,47 +15,48 @@ class Play extends Phaser.Scene {
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
         this.anims.create({
-            key: "enemyShip2",
-            frames: this.anims.generateFrameNumbers("enemyShip2"),
+            key: 'enemyShip2',
+            frames: this.anims.generateFrameNumbers('enemyShip2'),
             frameRate: 20,
             repeat: -1
         })
         this.anims.create({
-            key: "enemyShip3",
-            frames: this.anims.generateFrameNumbers("enemyShip3"),
+            key: 'enemyShip3',
+            frames: this.anims.generateFrameNumbers('enemyShip3'),
             frameRate: 20,
             repeat: -1
         })
         this.anims.create({
-            key: "explosion1",
-            frames: this.anims.generateFrameNumbers("explosion1"),
+            key: 'explosion1',
+            frames: this.anims.generateFrameNumbers('explosion1'),
             frameRate: 10,
             repeat: 1,
         })
         this.anims.create({
-            key: "playerShip",
-            frames: this.anims.generateFrameNumbers("playerShip"),
+            key: 'playerShip',
+            frames: this.anims.generateFrameNumbers('playerShip'),
             frameRate: 20,
             repeat: -1
         })
 
         this.sfx = {
             explosions: [
-                this.sound.add("explosion1"),
-                this.sound.add("explosion2"),
-                this.sound.add("explosion3"),
-                this.sound.add("explosion4")
+                this.sound.add('explosion1'),
+                this.sound.add('explosion2'),
+                this.sound.add('explosion3'),
+                this.sound.add('explosion4')
             ],
-            laser: this.sound.add("shot"),
+            laser: this.sound.add('shot'),
         }
 
-        
+        // Score
+        this.add.bitmapText(this.game.config.width-120, this.game.config.height -40, 'arcade', '0000', 48).setOrigin(0.5)
 
         this.player = new Player(
             this,
             this.game.config.width * 0.5,
             this.game.config.height * 0.5,
-            "playerShip"
+            'playerShip'
         )
         // console.log(this.player)
 
@@ -91,7 +92,7 @@ class Play extends Phaser.Scene {
                     )
                 }
                 else if (Phaser.Math.Between(0, 10) >= 5) {
-                    if (this.getEnemiesByType("ChaserShip").length < 5) {
+                    if (this.getEnemiesByType('ChaserShip').length < 5) {
 
                         enemy = new ChaserShip(
                             this,
@@ -128,8 +129,8 @@ class Play extends Phaser.Scene {
         })
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy) {
-            if (!player.getData("isDead") &&
-                !enemy.getData("isDead")) {
+            if (!player.getData('isDead') &&
+                !enemy.getData('isDead')) {
                 player.explode(false)
                 player.onDestroy()
                 enemy.explode(true)
@@ -137,8 +138,8 @@ class Play extends Phaser.Scene {
         })
 
         this.physics.add.overlap(this.player, this.enemyLasers, function (player, laser) {
-            if (!player.getData("isDead") &&
-                !laser.getData("isDead")) {
+            if (!player.getData('isDead') &&
+                !laser.getData('isDead')) {
                 player.explode(false)
                 player.onDestroy()
                 laser.destroy()
@@ -150,7 +151,7 @@ class Play extends Phaser.Scene {
         let arr = []
         for (let i = 0; i < this.enemies.getChildren().length; i++) {
             let enemy = this.enemies.getChildren()[i]
-            if (enemy.getData("type") == type) {
+            if (enemy.getData('type') == type) {
                 arr.push(enemy)
             }
         }
@@ -166,13 +167,13 @@ class Play extends Phaser.Scene {
     collectCoin(player, coin) {
         coin.destroy()
         player.enhanceFireRate()
-        this.sound.play("coin")
+        this.sound.play('coin')
         // this.cameras.main.shake(150, 0.01)
     }
 
     update() {
 
-        if (!this.player.getData("isDead")) {
+        if (!this.player.getData('isDead')) {
             this.player.update()
             if (this.keyW.isDown) {
                 this.player.moveUp()
@@ -188,16 +189,16 @@ class Play extends Phaser.Scene {
             }
 
             if (this.keySpace.isDown) {
-                this.player.setData("isShooting", true)
+                this.player.setData('isShooting', true)
             }
             else {
-                this.player.setData("timerShootTick", this.player.getData("timerShootDelay") - 1)
-                this.player.setData("isShooting", false)
+                this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1)
+                this.player.setData('isShooting', false)
             }
         }
 
-        if (this.player.getData("isDead")) {
-            this.cameras.main.shake(100, 0.01)
+        if (this.player.getData('isDead')) {
+            this.cameras.main.shake(7, 0.015)
         }
 
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)
