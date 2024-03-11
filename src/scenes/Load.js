@@ -19,9 +19,13 @@ class Load extends Phaser.Scene {
         this.load.audio('coin', 'audio/coin.wav')
 
         // img
-        this.load.image('title', 'img/SB.png')
         this.load.image('background1', 'img/originalBackground.png')
         this.load.image('coin', 'img/coin.png')
+
+        this.load.spritesheet('title', 'img/title.png', {
+            frameWidth: 750,
+            frameHeight: 540
+        })
 
         this.load.spritesheet('explosion1', 'img/explosion1.png', {
             frameWidth: 54,
