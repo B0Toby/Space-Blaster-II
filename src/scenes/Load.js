@@ -23,7 +23,7 @@ class Load extends Phaser.Scene {
         this.load.image('background1', 'img/originalBackground.png')
         this.load.image('coin', 'img/coin.png')
 
-        this.load.spritesheet('title', 'img/title.png', {
+        this.load.spritesheet('title', 'img/Title.png', {
             frameWidth: 750,
             frameHeight: 540
         })
