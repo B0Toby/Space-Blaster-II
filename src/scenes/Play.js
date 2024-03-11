@@ -64,10 +64,9 @@ class Play extends Phaser.Scene {
         )
         // console.log(this.player)
 
-
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
+        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 

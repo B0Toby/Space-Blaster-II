@@ -10,6 +10,7 @@ class Load extends Phaser.Scene {
 
         // audio
         this.load.audio('bgmusic', 'audio/bgm.wav')
+        this.load.audio('titleLoop', 'audio/titleLoop.wav')
         this.load.audio('explosion1', 'audio/sfx-explosion1.wav')
         this.load.audio('explosion2', 'audio/sfx-explosion2.wav')
         this.load.audio('explosion3', 'audio/sfx-explosion3.wav')
@@ -18,6 +19,7 @@ class Load extends Phaser.Scene {
         this.load.audio('coin', 'audio/coin.wav')
 
         // img
+        this.load.image('title', 'img/SB.png')
         this.load.image('background1', 'img/originalBackground.png')
         this.load.image('coin', 'img/coin.png')
 
