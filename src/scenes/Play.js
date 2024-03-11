@@ -56,18 +56,17 @@ class Play extends Phaser.Scene {
         this.score = 0
         this.scoreText = this.add.bitmapText(this.game.config.width - 120, this.game.config.height - 40, 'arcade', this.score.toString().padStart(4, '0'), 48).setOrigin(0.5)
 
-        this.player = new Player(
-            this,
-            this.game.config.width * 0.5,
-            this.game.config.height * 0.5,
-            'playerShip'
-        )
+        this.player = new Player(this, this.game.config.width * 0.5, this.game.config.height * 0.5, 'playerShip')
         // console.log(this.player)
+        this.player2 = new Player(this, 0, 0, 'playerShip');
+        this.player2.setVisible(false); // Start with the duplicate player invisible
+        this.isDuplicated = false; // State to track if the ship is duplicated
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        this.keySHIFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT)
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
         this.enemies = this.add.group()
@@ -122,6 +121,19 @@ class Play extends Phaser.Scene {
         })
     }
 
+    togglePlayerDuplication() {
+        this.isDuplicated = !this.isDuplicated;
+        this.player2.setVisible(this.isDuplicated); // Toggle visibility
+        if (this.isDuplicated) {
+            // Position the duplicate ship next to the original player
+            this.player2.x = this.player.x - 48;
+            this.player2.y = this.player.y;
+            this.player2.body.enable = true; // Enable physics body for collisions
+        } else {
+            this.player2.body.enable = false; // Disable physics body to prevent collisions
+        }
+    }
+
     getEnemiesByType(type) {
         let arr = []
         for (let i = 0; i < this.enemies.getChildren().length; i++) {
@@ -167,6 +179,17 @@ class Play extends Phaser.Scene {
         })
     }
 
+    playerDead(player) {
+        // Destroy the other player if one is dead
+        if (player === this.player && this.player2 && !this.player2.getData('isDead')) {
+            this.player2.explode(false);
+        }
+        if (player === this.player2 && this.player && !this.player.getData('isDead')) {
+            this.player.explode(false);
+        }
+        // Handle game over or other logic here
+    }
+
     update() {
 
         if (!this.player.getData('isDead')) {
@@ -183,15 +206,46 @@ class Play extends Phaser.Scene {
             else if (this.keyD.isDown) {
                 this.player.moveRight()
             }
+        }
 
-            if (this.keySpace.isDown) {
-                this.player.setData('isShooting', true)
+        if (this.keySpace.isDown) {
+            this.player.setData('isShooting', true);
+            // Synchronize shooting state for player2 with player when duplicated
+            if (this.isDuplicated) {
+                this.player2.setData('isShooting', true);
             }
-            else {
-                this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1)
-                this.player.setData('isShooting', false)
+        } else {
+            this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1);
+            this.player.setData('isShooting', false);
+            // Reset player2's shooting state and tick when not shooting
+            if (this.isDuplicated) {
+                this.player2.setData('timerShootTick', this.player.getData('timerShootDelay') - 1);
+                this.player2.setData('isShooting', false);
             }
         }
+
+        if (Phaser.Input.Keyboard.JustDown(this.keySHIFT)) {
+            this.togglePlayerDuplication();
+        }
+
+        if (this.isDuplicated) {
+            this.player2.setData('timerShootDelay', this.player.getData('timerShootDelay'));
+            this.player2.setData('timerShootTick', this.player.getData('timerShootTick'));
+            this.player2.x = this.player.x - 48; // Maintain the position next to the main player
+            this.player2.y = this.player.y;
+            // Synchronize the shoot timing with player
+            if (this.player2.getData('isShooting')) {
+                if (this.player2.getData('timerShootTick') < this.player2.getData('timerShootDelay')) {
+                    this.player2.setData('timerShootTick', this.player2.getData('timerShootTick') + 1);
+                } else {
+                    let laser = new PlayerLaser(this, this.player2.x, this.player2.y);
+                    this.playerLasers.add(laser);
+                    this.sfx.laser.play();
+                    this.player2.setData('timerShootTick', 0);
+                }
+            }
+        }
+
 
         this.physics.add.collider(this.playerLasers, this.enemies, function (playerLaser, enemy) {
             if (enemy) {
@@ -205,25 +259,23 @@ class Play extends Phaser.Scene {
             }
         }, null, this)
 
-        this.physics.add.overlap(this.player, this.enemies, function (player, enemy) {
-            if (!player.getData('isDead') &&
-                !enemy.getData('isDead')) {
-                player.explode(false)
-                player.onDestroy()
-                enemy.explode(true)
+        this.physics.add.overlap([this.player, this.player2], this.enemies, function (player, enemy) {
+            if (!player.getData('isDead') && !enemy.getData('isDead')) {
+                player.explode(false);
+                player.onDestroy();
+                enemy.explode(true);
             }
-        })
-
-        this.physics.add.overlap(this.player, this.enemyLasers, function (player, laser) {
-            if (!player.getData('isDead') &&
-                !laser.getData('isDead')) {
-                player.explode(false)
-                player.onDestroy()
-                laser.destroy()
+        }, null, this);
+        
+        this.physics.add.overlap([this.player, this.player2], this.enemyLasers, function (player, laser) {
+            if (!player.getData('isDead') && !laser.getData('isDead')) {
+                player.explode(false);
+                player.onDestroy();
+                laser.destroy();
             }
-        })
+        }, null, this);
 
-        this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this)
+        this.physics.add.overlap([this.player, this.player2], this.coins, this.collectCoin, null, this);
 
         // gg
         if (this.player.getData('isDead')) {

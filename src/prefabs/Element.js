@@ -81,6 +81,7 @@ class Player extends Element {
             callbackScope: this,
             loop: false
         })
+        this.scene.playerDead(this)
     }
 
     update() {
