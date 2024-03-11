@@ -5,10 +5,10 @@ class Play extends Phaser.Scene {
 
     create() {
         // debug toggle
-        this.input.keyboard.on('keydown-E', function () {
-            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-            this.physics.world.debugGraphic.clear()
-        }, this)
+        // this.input.keyboard.on('keydown-E', function () {
+        //     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+        //     this.physics.world.debugGraphic.clear()
+        // }, this)
 
         this.bgmusic = this.sound.add('bgmusic', { volume: 0.5, loop: true })
         this.bgmusic.play()
