@@ -56,11 +56,11 @@ class Play extends Phaser.Scene {
         this.score = 0
         this.scoreText = this.add.bitmapText(this.game.config.width - 120, this.game.config.height - 40, 'arcade', this.score.toString().padStart(4, '0'), 48).setOrigin(0.5)
 
-        this.player = new Player(this, this.game.config.width * 0.5, this.game.config.height * 0.5, 'playerShip')
+        this.player = new Player(this, this.game.config.width/2, this.game.config.height/2, 'playerShip')
         // console.log(this.player)
-        this.player2 = new Player(this, 0, 0, 'playerShip');
-        this.player2.setVisible(false); // Start with the duplicate player invisible
-        this.isDuplicated = false; // State to track if the ship is duplicated
+        this.player2 = new Player(this, game.config.width/2, game.config.height, 'playerShip')
+        this.player2.setVisible(false)
+        this.isDuplicated = false
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
@@ -122,15 +122,14 @@ class Play extends Phaser.Scene {
     }
 
     togglePlayerDuplication() {
-        this.isDuplicated = !this.isDuplicated;
-        this.player2.setVisible(this.isDuplicated); // Toggle visibility
+        this.isDuplicated = !this.isDuplicated
+        this.player2.setVisible(this.isDuplicated)
         if (this.isDuplicated) {
-            // Position the duplicate ship next to the original player
-            this.player2.x = this.player.x - 48;
-            this.player2.y = this.player.y;
-            this.player2.body.enable = true; // Enable physics body for collisions
+            this.player2.x = this.player.x - 48
+            this.player2.y = this.player.y
+            this.player2.body.enable = true
         } else {
-            this.player2.body.enable = false; // Disable physics body to prevent collisions
+            this.player2.body.enable = false
         }
     }
 
@@ -152,46 +151,49 @@ class Play extends Phaser.Scene {
     }
 
     collectCoin(player, coin) {
-        coin.destroy()
-        player.enhanceFireRate()
-        this.sound.play('coin')
-        // flash effect when collect coin
-        let flashCount = 0
-        let isTinted = false
-        let flashEvent = this.time.addEvent({
-            delay: 100,
-            callback: () => {
-                if (isTinted) {
-                    player.clearTint()
-                    isTinted = false
-                } else {
-                    player.setTintFill(0xFFFFFF)
-                    isTinted = true
-                }
-                flashCount += 1
-                if (flashCount >= 10) {
-                    flashEvent.remove()
-                    player.clearTint()
-                }
-            },
-            callbackScope: this,
-            loop: true
-        })
+        coin.destroy();
+        this.sound.play('coin');
+
+        this.player.enhanceFireRate();
+        if (this.isDuplicated) {
+            this.player2.enhanceFireRate();
+        }
+    
+        let flashEffect = (target) => {
+            let flashCount = 0;
+            let flashEvent = this.time.addEvent({
+                delay: 100,
+                callback: () => {
+                    target.setTint(flashCount % 2 === 0 ? 0xFFFFFF : 0x000000);
+                    flashCount++;
+                    if (flashCount > 5) {
+                        target.clearTint();
+                        flashEvent.remove();
+                    }
+                },
+                repeat: 5
+            });
+        };
+    
+        flashEffect(this.player);
+        if (this.isDuplicated) {
+            flashEffect(this.player2);
+        }
     }
+    
 
     playerDead(player) {
         // Destroy the other player if one is dead
         if (player === this.player && this.player2 && !this.player2.getData('isDead')) {
-            this.player2.explode(false);
+            this.player2.explode(false)
         }
         if (player === this.player2 && this.player && !this.player.getData('isDead')) {
-            this.player.explode(false);
+            this.player.explode(false)
         }
         // Handle game over or other logic here
     }
 
     update() {
-
         if (!this.player.getData('isDead')) {
             this.player.update()
             if (this.keyW.isDown) {
@@ -209,39 +211,37 @@ class Play extends Phaser.Scene {
         }
 
         if (this.keySpace.isDown) {
-            this.player.setData('isShooting', true);
-            // Synchronize shooting state for player2 with player when duplicated
+            this.player.setData('isShooting', true)
             if (this.isDuplicated) {
-                this.player2.setData('isShooting', true);
+                this.player2.setData('isShooting', true)
             }
         } else {
-            this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1);
-            this.player.setData('isShooting', false);
-            // Reset player2's shooting state and tick when not shooting
+            this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1)
+            this.player.setData('isShooting', false)
             if (this.isDuplicated) {
-                this.player2.setData('timerShootTick', this.player.getData('timerShootDelay') - 1);
-                this.player2.setData('isShooting', false);
+                this.player2.setData('timerShootTick', this.player.getData('timerShootDelay') - 1)
+                this.player2.setData('isShooting', false)
             }
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keySHIFT)) {
-            this.togglePlayerDuplication();
+            this.togglePlayerDuplication()
         }
 
         if (this.isDuplicated) {
-            this.player2.setData('timerShootDelay', this.player.getData('timerShootDelay'));
-            this.player2.setData('timerShootTick', this.player.getData('timerShootTick'));
-            this.player2.x = this.player.x - 48; // Maintain the position next to the main player
-            this.player2.y = this.player.y;
-            // Synchronize the shoot timing with player
+            this.player2.setData('timerShootDelay', this.player.getData('timerShootDelay'))
+            this.player2.setData('timerShootTick', this.player.getData('timerShootTick'))
+            this.player2.x = this.player.x - 48
+            this.player2.y = this.player.y
+
             if (this.player2.getData('isShooting')) {
                 if (this.player2.getData('timerShootTick') < this.player2.getData('timerShootDelay')) {
-                    this.player2.setData('timerShootTick', this.player2.getData('timerShootTick') + 1);
+                    this.player2.setData('timerShootTick', this.player2.getData('timerShootTick') + 1)
                 } else {
-                    let laser = new PlayerLaser(this, this.player2.x, this.player2.y);
-                    this.playerLasers.add(laser);
-                    this.sfx.laser.play();
-                    this.player2.setData('timerShootTick', 0);
+                    let laser = new PlayerLaser(this, this.player2.x, this.player2.y)
+                    this.playerLasers.add(laser)
+                    this.sfx.laser.play()
+                    this.player2.setData('timerShootTick', 0)
                 }
             }
         }
@@ -261,21 +261,21 @@ class Play extends Phaser.Scene {
 
         this.physics.add.overlap([this.player, this.player2], this.enemies, function (player, enemy) {
             if (!player.getData('isDead') && !enemy.getData('isDead')) {
-                player.explode(false);
-                player.onDestroy();
-                enemy.explode(true);
+                player.explode(false)
+                player.onDestroy()
+                enemy.explode(true)
             }
-        }, null, this);
+        }, null, this)
         
         this.physics.add.overlap([this.player, this.player2], this.enemyLasers, function (player, laser) {
             if (!player.getData('isDead') && !laser.getData('isDead')) {
-                player.explode(false);
-                player.onDestroy();
-                laser.destroy();
+                player.explode(false)
+                player.onDestroy()
+                laser.destroy()
             }
-        }, null, this);
+        }, null, this)
 
-        this.physics.add.overlap([this.player, this.player2], this.coins, this.collectCoin, null, this);
+        this.physics.add.overlap([this.player, this.player2], this.coins, this.collectCoin, null, this)
 
         // gg
         if (this.player.getData('isDead')) {
