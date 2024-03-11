@@ -28,7 +28,7 @@ class Menu extends Phaser.Scene {
             this.scene.start('tutorScene')
             this.titleLoop.stop()
         }
-        if (this.keySpace.isDown) {
+        if (this.keyW.isDown) {
             this.scene.start('playScene')
             this.titleLoop.stop()
         }
