@@ -61,13 +61,13 @@ class Player extends Element {
     }
 
     enhanceFireRate() {
-        if(this.isPowerUpActive) return // Avoid stacking power-ups
+        if(this.isPowerUpActive) return
 
-        this.setData('timerShootDelay', 20) // Decrease delay for faster shooting
+        this.setData('timerShootDelay', 20) // rate of fire
         this.isPowerUpActive = true
 
         this.scene.time.delayedCall(10000, () => {
-            this.setData('timerShootDelay', 50) // Reset to original delay
+            this.setData('timerShootDelay', 50)
             this.isPowerUpActive = false
         })
     }
@@ -105,7 +105,7 @@ class Player extends Element {
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'playerLaser')
-        this.body.velocity.y = -250
+        this.body.velocity.y = -280
     }
 }
 

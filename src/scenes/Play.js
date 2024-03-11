@@ -200,7 +200,7 @@ class Play extends Phaser.Scene {
                 }
                 enemy.explode(true)
                 playerLaser.destroy()
-                this.score += 1
+                this.score++
                 this.scoreText.setText(this.score.toString().padStart(4, '0'))
             }
         }, null, this)
@@ -230,6 +230,13 @@ class Play extends Phaser.Scene {
             this.cameras.main.shake(7, 0.015)
             this.bgmusic.stop()
         }
+        if (this.score < 0) {
+            this.bgmusic.stop()
+            this.scene.start('gameOverScene')
+        }
+        if (this.score > highscore){
+            highscore = this.score
+        }
 
         for (let i = 0; i < this.enemies.getChildren().length; i++) {
             let enemy = this.enemies.getChildren()[i]
@@ -245,7 +252,8 @@ class Play extends Phaser.Scene {
                         enemy.onDestroy()
                     }
                     enemy.destroy()
-                    this.score--
+                    this.cameras.main.shake(10, 0.02)
+                    this.score -= 4 // -4 when enemy go down screen
                     this.scoreText.setText(this.score.toString().padStart(4, '0'))
                 }
             }

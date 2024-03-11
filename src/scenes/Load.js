@@ -17,6 +17,7 @@ class Load extends Phaser.Scene {
         this.load.audio('explosion4', 'audio/sfx-explosion4.wav')
         this.load.audio('shot', 'audio/shot.wav')
         this.load.audio('coin', 'audio/coin.wav')
+        this.load.audio('gg', 'audio/gg.wav')
 
         // img
         this.load.image('background1', 'img/originalBackground.png')
