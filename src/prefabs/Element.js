@@ -63,7 +63,7 @@ class Player extends Element {
     enhanceFireRate() {
         if(this.isPowerUpActive) return
 
-        this.setData('timerShootDelay', 20) // rate of fire
+        this.setData('timerShootDelay', 25) // rate of fire
         this.isPowerUpActive = true
 
         this.scene.time.delayedCall(10000, () => { // buff time
