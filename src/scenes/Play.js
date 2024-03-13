@@ -53,7 +53,9 @@ class Play extends Phaser.Scene {
                 this.sound.add('explosion1'),
                 this.sound.add('explosion2'),
                 this.sound.add('explosion3'),
-                this.sound.add('explosion4')
+                this.sound.add('explosion4'),
+                this.sound.add('explosion5'),
+                this.sound.add('explosion6')
             ],
             laser: this.sound.add('shot'),
         }
@@ -312,6 +314,8 @@ class Play extends Phaser.Scene {
                     enemy.destroy()
                     this.cameras.main.shake(10, 0.02)
                     this.score -= 4 // -4 when enemy go down screen
+                    this.pass = this.sound.add('pass')
+                    this.pass.play()
                     this.scoreText.setText(this.score.toString().padStart(4, '0'))
                 }
             }
