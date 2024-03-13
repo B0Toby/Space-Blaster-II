@@ -66,7 +66,7 @@ class Player extends Element {
         this.setData('timerShootDelay', 20) // rate of fire
         this.isPowerUpActive = true
 
-        this.scene.time.delayedCall(10000, () => {
+        this.scene.time.delayedCall(10000, () => { // buff time
             this.setData('timerShootDelay', 50)
             this.isPowerUpActive = false
         })
@@ -209,6 +209,7 @@ class CarrierShip extends Element {
 class Coin extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'coin', 'Coin')
+        this.play('coin')
 
         this.body.velocity.y = Phaser.Math.Between(75, 100)
     }

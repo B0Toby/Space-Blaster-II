@@ -23,8 +23,5 @@ class GameOver extends Phaser.Scene {
         if (this.restartKey.isDown) {
             this.scene.start('playScene')
         }
-        if (this.keyS.isDown) {
-            this.scene.start('menuScene')
-        }
     }
 }

@@ -6,7 +6,7 @@ class Credit extends Phaser.Scene {
     create() {
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
-        this.add.bitmapText(174, 75, 'arcade', 'Credits:', 24, 0).setOrigin(0.5)
+        this.add.bitmapText(172, 75, 'arcade', 'Credits:', 24, 0).setOrigin(0.5)
         this.add.bitmapText(300, 150, 'arcade', 'Code/Art: Toby Pang\nSFX/Music:\nsfxr.me\nsoundraw.io\nwww.looperman.com\nInstructor: Nathan Altice', 18, 0).setOrigin(0.5)
         this.add.bitmapText(this.game.config.width * 0.5, 400, 'arcade', 'Back to Menu (Press S)', 32, 1).setOrigin(0.5)
 

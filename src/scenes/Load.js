@@ -21,7 +21,10 @@ class Load extends Phaser.Scene {
 
         // img
         this.load.image('background1', 'img/originalBackground.png')
-        this.load.image('coin', 'img/coin.png')
+        this.load.spritesheet('coin', 'img/coin.png', {
+            frameWidth: 28,
+            frameHeight: 28
+        })
 
         this.load.spritesheet('title', 'img/Title.png', {
             frameWidth: 750,
@@ -39,7 +42,7 @@ class Load extends Phaser.Scene {
         })
         this.load.spritesheet('enemyShip3', 'img/enemyShip3.png', {
             frameWidth: 28,
-            frameHeight: 20
+            frameHeight: 28
         })
         this.load.image('enemyLaser', 'img/enemyLaser.png')
         this.load.image('playerLaser', 'img/playerLaser.png')

@@ -5,10 +5,10 @@ class Play extends Phaser.Scene {
 
     create() {
         // debug toggle
-        // this.input.keyboard.on('keydown-E', function () {
-        //     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-        //     this.physics.world.debugGraphic.clear()
-        // }, this)
+        this.input.keyboard.on('keydown-E', function () {
+            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+            this.physics.world.debugGraphic.clear()
+        }, this)
 
         this.bgmusic = this.sound.add('bgmusic', { volume: 0.5, loop: true })
         this.bgmusic.play()
@@ -26,7 +26,7 @@ class Play extends Phaser.Scene {
         this.anims.create({
             key: 'enemyShip3',
             frames: this.anims.generateFrameNumbers('enemyShip3'),
-            frameRate: 20,
+            frameRate: 6,
             repeat: -1
         })
         this.anims.create({
@@ -39,6 +39,12 @@ class Play extends Phaser.Scene {
             key: 'playerShip',
             frames: this.anims.generateFrameNumbers('playerShip'),
             frameRate: 20,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'coin',
+            frames: this.anims.generateFrameNumbers('coin'),
+            frameRate: 8,
             repeat: -1
         })
 
@@ -75,7 +81,7 @@ class Play extends Phaser.Scene {
         this.coins = this.add.group()
 
         this.coinSpawnTimer = this.time.addEvent({
-            delay: Phaser.Math.Between(15000, 20000),
+            delay: Phaser.Math.Between(10000, 15000),
             callback: this.spawnCoin,
             callbackScope: this,
             loop: true
