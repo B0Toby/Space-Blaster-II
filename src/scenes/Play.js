@@ -5,10 +5,10 @@ class Play extends Phaser.Scene {
 
     create() {
         // debug toggle
-        this.input.keyboard.on('keydown-E', function () {
-            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-            this.physics.world.debugGraphic.clear()
-        }, this)
+        // this.input.keyboard.on('keydown-E', function () {
+        //     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+        //     this.physics.world.debugGraphic.clear()
+        // }, this)
 
         this.bgmusic = this.sound.add('bgmusic', { volume: 0.5, loop: true })
         this.bgmusic.play()
@@ -68,6 +68,7 @@ class Play extends Phaser.Scene {
         // console.log(this.player)
         this.player2 = new Player(this, game.config.width/2, game.config.height, 'playerShip')
         this.player2.setVisible(false)
+        this.player2.body.enable = false
         this.isDuplicated = false
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
