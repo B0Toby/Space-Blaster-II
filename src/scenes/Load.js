@@ -37,11 +37,11 @@ class Load extends Phaser.Scene {
         })
         this.load.image('enemyShip1', 'img/enemyShip1.png')
         this.load.spritesheet('enemyShip2', 'img/enemyShip2.png', {
-            frameWidth: 56,
-            frameHeight: 32
+            frameWidth: 48,
+            frameHeight: 25
         })
         this.load.spritesheet('enemyShip3', 'img/enemyShip3.png', {
-            frameWidth: 28,
+            frameWidth: 23,
             frameHeight: 28
         })
         this.load.image('enemyLaser', 'img/enemyLaser.png')
