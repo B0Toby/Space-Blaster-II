@@ -84,7 +84,7 @@ class Play extends Phaser.Scene {
         this.coins = this.add.group()
 
         this.coinSpawnTimer = this.time.addEvent({
-            delay: Phaser.Math.Between(10000, 15000),
+            delay: Phaser.Math.Between(12500, 17500),
             callback: this.spawnCoin,
             callbackScope: this,
             loop: true
@@ -98,7 +98,7 @@ class Play extends Phaser.Scene {
                 if (Phaser.Math.Between(0, 10) >= 3) {
                     enemy = new ShooterShip(
                         this,
-                        Phaser.Math.Between(0, this.game.config.width),
+                        Phaser.Math.Between(50, this.game.config.width - 50),
                         0
                     )
                 }
@@ -107,7 +107,7 @@ class Play extends Phaser.Scene {
 
                         enemy = new ChaserShip(
                             this,
-                            Phaser.Math.Between(0, this.game.config.width),
+                            Phaser.Math.Between(50, this.game.config.width - 50),
                             0
                         )
                     }
@@ -115,7 +115,7 @@ class Play extends Phaser.Scene {
                 else {
                     enemy = new CarrierShip(
                         this,
-                        Phaser.Math.Between(0, this.game.config.width),
+                        Phaser.Math.Between(50, this.game.config.width - 50),
                         0
                     )
                 }
@@ -154,7 +154,7 @@ class Play extends Phaser.Scene {
     }
 
     spawnCoin() {
-        let x = Phaser.Math.Between(0, this.game.config.width)
+        let x = Phaser.Math.Between(50, this.game.config.width - 50)
         let coin = new Coin(this, x, 0)
         this.coins.add(coin)
     }

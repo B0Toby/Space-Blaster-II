@@ -43,7 +43,7 @@ class Player extends Element {
         this.setData('isShooting', false)
         this.setData('timerShootDelay', 50)
         this.setData('timerShootTick', this.getData('timerShootDelay') - 1)
-
+        this.setData('laserSpeed', -280)
         this.isPowerUpActive = false
     }
 
@@ -64,10 +64,12 @@ class Player extends Element {
         if(this.isPowerUpActive) return
 
         this.setData('timerShootDelay', 25) // rate of fire
+        this.setData('laserSpeed', -400) // laser speed
         this.isPowerUpActive = true
 
         this.scene.time.delayedCall(10000, () => { // buff time
             this.setData('timerShootDelay', 50)
+            this.setData('laserSpeed', -280)
             this.isPowerUpActive = false
         })
     }
@@ -106,7 +108,8 @@ class Player extends Element {
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'playerLaser')
-        this.body.velocity.y = -280
+        const playerLaserSpeed = scene.player.getData('laserSpeed')
+        this.body.velocity.y = playerLaserSpeed
     }
 }
 
