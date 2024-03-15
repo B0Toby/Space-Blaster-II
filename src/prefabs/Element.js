@@ -173,7 +173,7 @@ class ShooterShip extends Element {
         this.body.velocity.y = Phaser.Math.Between(50, 100)
 
         this.shootTimer = this.scene.time.addEvent({
-            delay: Phaser.Math.Between(500,2000),
+            delay: Phaser.Math.Between(1000,2500),
             callback: function () {
                 let laser = new EnemyLaser(
                     this.scene,
