@@ -34,6 +34,7 @@ class Element extends Phaser.GameObjects.Sprite {Object
     }
 }
 
+// Player
 class Player extends Element {
     constructor(scene, x, y, key) {
         super(scene, x, y, key, 'Player')
@@ -105,6 +106,7 @@ class Player extends Element {
     }
 }
 
+// Player laser
 class PlayerLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'playerLaser')
@@ -113,6 +115,7 @@ class PlayerLaser extends Element {
     }
 }
 
+// Enemy laser
 class EnemyLaser extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'enemyLaser')
@@ -120,6 +123,7 @@ class EnemyLaser extends Element {
     }
 }
 
+// Chaser ship
 class ChaserShip extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'enemyShip1', 'ChaserShip')
@@ -127,10 +131,10 @@ class ChaserShip extends Element {
         this.body.velocity.y = Phaser.Math.Between(50, 100)
 
         this.states = {
-            MOVE_DOWN: 'MOVE_DOWN',
+            MOVE_DOWN: 'DOWN',
             CHASE: 'CHASE'
         }
-        this.state = this.states.MOVE_DOWN
+        this.state = this.states.DOWN
     }
 
     update() {
@@ -140,11 +144,12 @@ class ChaserShip extends Element {
                 this.y,
                 this.scene.player.x,
                 this.scene.player.y
-            ) < 320) {
+            ) < 300) { // Chase distance
 
                 this.state = this.states.CHASE
             }
 
+            // Chaser ship logic
             if (this.state == this.states.CHASE) {
                 let dx = this.scene.player.x - this.x
                 let dy = this.scene.player.y - this.y
@@ -168,6 +173,7 @@ class ChaserShip extends Element {
     }
 }
 
+// Shooter ship
 class ShooterShip extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'enemyShip2', 'ShooterShip')
@@ -176,7 +182,7 @@ class ShooterShip extends Element {
         this.body.velocity.y = Phaser.Math.Between(50, 100)
 
         this.shootTimer = this.scene.time.addEvent({
-            delay: Phaser.Math.Between(1000,2500),
+            delay: Phaser.Math.Between(800,2000),
             callback: function () {
                 let laser = new EnemyLaser(
                     this.scene,
@@ -200,15 +206,17 @@ class ShooterShip extends Element {
     }
 }
 
-class CarrierShip extends Element {
+// SUS
+class AmongusShip extends Element {
     constructor(scene, x, y) {
-        super(scene, x, y, 'enemyShip3', 'CarrierShip')
+        super(scene, x, y, 'enemyShip3', 'AmongusShip')
         this.play('enemyShip3')
 
         this.body.velocity.y = Phaser.Math.Between(50, 100)
     }
 }
 
+// Coin
 class Coin extends Element {
     constructor(scene, x, y) {
         super(scene, x, y, 'coin', 'Coin')

@@ -6,8 +6,9 @@ class Credit extends Phaser.Scene {
     create() {
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
-        this.add.bitmapText(172, 75, 'arcade', 'Credits:', 24, 0).setOrigin(0.5)
-        this.add.bitmapText(300, 150, 'arcade', 'Code/Art: Toby Pang\nSFX/Music:\nsfxr.me\nsoundraw.io\nwww.looperman.com\nInstructor: Nathan Altice', 18, 0).setOrigin(0.5)
+        this.add.bitmapText(136, 78, 'arcade', 'Credits:', 24, 0).setOrigin(0.5)
+        this.add.bitmapText(300, 200, 'arcade', 'Code: Toby Pang\nArt: Toby Pang & Lirong Liang\nSFX/Music:\nsfxr.me\nsoundraw.io\nlooperman.com\nmotionarray.com\nFont:\ndafont.com\n\nInstructor: Nathan Altice', 18, 0).setOrigin(0.5)
+        this.add.bitmapText(this.game.config.width * 0.5, 500, 'arcade', 'Source: Code Monkeys - The Woz, Season 1, Episode 1 (2007)', 12, 0).setOrigin(0.5)
         this.add.bitmapText(this.game.config.width * 0.5, 400, 'arcade', 'Back to Menu (Press S)', 32, 1).setOrigin(0.5)
 
         this.titleLoop = this.sound.add('titleLoop', { volume: 0.5, loop: true })

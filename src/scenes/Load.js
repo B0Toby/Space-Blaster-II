@@ -24,10 +24,6 @@ class Load extends Phaser.Scene {
 
         // img
         this.load.image('background1', 'img/originalBackground.png')
-        this.load.spritesheet('coin', 'img/coin.png', {
-            frameWidth: 28,
-            frameHeight: 28
-        })
 
         this.load.spritesheet('title', 'img/Title.png', {
             frameWidth: 750,
@@ -54,10 +50,15 @@ class Load extends Phaser.Scene {
             frameHeight: 48
         })
 
-        // loadingBar
+        this.load.spritesheet('coin', 'img/coin.png', {
+            frameWidth: 28,
+            frameHeight: 28
+        })
+
+        // Loading bar
         let loadingBar = this.add.graphics({
             fillStyle: {
-                color: 0xFFFFFF
+                color: 0xdeb887
             }
         })
         

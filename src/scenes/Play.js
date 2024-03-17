@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         //     this.physics.world.debugGraphic.clear()
         // }, this)
 
+        // Looping background music
         this.bgmusic = this.sound.add('bgmusic', { volume: 0.5, loop: true })
         this.bgmusic.play()
 
@@ -17,6 +18,7 @@ class Play extends Phaser.Scene {
 
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
+        // Sprite animations
         this.anims.create({
             key: 'enemyShip2',
             frames: this.anims.generateFrameNumbers('enemyShip2'),
@@ -48,6 +50,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         })
 
+        // Random explosion sfx
         this.sfx = {
             explosions: [
                 this.sound.add('explosion1'),
@@ -65,12 +68,12 @@ class Play extends Phaser.Scene {
         this.scoreText = this.add.bitmapText(this.game.config.width - 120, this.game.config.height - 40, 'arcade', this.score.toString().padStart(4, '0'), 48).setOrigin(0.5)
 
         this.player = new Player(this, this.game.config.width/2, this.game.config.height/2, 'playerShip')
-        // console.log(this.player)
         this.player2 = new Player(this, game.config.width/2, game.config.height, 'playerShip')
         this.player2.setVisible(false)
         this.player2.body.enable = false
         this.isDuplicated = false
 
+        // Input
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
@@ -94,8 +97,9 @@ class Play extends Phaser.Scene {
             loop: true
         })
 
+        // Enemy spawn logic
         this.time.addEvent({
-            delay: 1000,
+            delay: Phaser.Math.Between(900, 1100),
             callback: function () {
                 let enemy = null
 
@@ -117,7 +121,7 @@ class Play extends Phaser.Scene {
                     }
                 }
                 else {
-                    enemy = new CarrierShip(
+                    enemy = new AmongusShip(
                         this,
                         Phaser.Math.Between(50, this.game.config.width - 50),
                         0
@@ -196,14 +200,12 @@ class Play extends Phaser.Scene {
     
 
     playerDead(player) {
-        // Destroy the other player if one is dead
         if (player === this.player && this.player2 && !this.player2.getData('isDead')) {
             this.player2.explode(false)
         }
         if (player === this.player2 && this.player && !this.player.getData('isDead')) {
             this.player.explode(false)
         }
-        // Handle game over or other logic here
     }
 
     update() {
@@ -237,6 +239,7 @@ class Play extends Phaser.Scene {
             }
         }
 
+        // Toggle 1/2 ships key
         if (Phaser.Input.Keyboard.JustDown(this.keySHIFT)) {
             this.togglePlayerDuplication()
         }
@@ -258,7 +261,6 @@ class Play extends Phaser.Scene {
                 }
             }
         }
-
 
         this.physics.add.collider(this.playerLasers, this.enemies, function (playerLaser, enemy) {
             if (enemy) {
@@ -290,12 +292,12 @@ class Play extends Phaser.Scene {
 
         this.physics.add.overlap([this.player, this.player2], this.coins, this.collectCoin, null, this)
 
-        // gg
+        // GG
         if (this.player.getData('isDead')) {
             this.cameras.main.shake(7, 0.015)
             this.bgmusic.stop()
         }
-        if (this.score < 0) {
+        if (this.score < 0 || this.score > 9999) { // score limit: 9999
             this.bgmusic.stop()
             this.scene.start('gameOverScene')
         }
@@ -318,7 +320,7 @@ class Play extends Phaser.Scene {
                     }
                     enemy.destroy()
                     this.cameras.main.shake(10, 0.02)
-                    this.score -= 4 // -4 when enemy go down screen
+                    this.score -= 4 // -4 when enemy cross bottom
                     this.pass = this.sound.add('pass')
                     this.pass.play()
                     this.scoreText.setText(this.score.toString().padStart(4, '0'))
