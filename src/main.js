@@ -1,3 +1,7 @@
+// Name: Toby Pang
+// Title: Space Blaster II
+// Approximate time: 32 hours
+
 let config = {
     type: Phaser.AUTO,
     width: 750,

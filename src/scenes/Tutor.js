@@ -6,7 +6,7 @@ class Tutor extends Phaser.Scene {
     create() {
         this.background = this.add.image(0, 0, 'background1').setOrigin(0, 0)
 
-        this.add.bitmapText(this.game.config.width * 0.5, 150, 'arcade', 'MOVE - WASD\nSHOOT - SPACE\nTOGGLE SHIPS - SHIFT', 32, 1).setOrigin(0.5)
+        this.add.bitmapText(this.game.config.width * 0.5, 150, 'arcade', 'SHOOT - SPACE\nMOVE - WASD/ARROWS\nTOGGLE SHIPS - SHIFT', 32, 1).setOrigin(0.5)
         this.add.bitmapText(this.game.config.width * 0.5, 280, 'arcade', 'ENEMY CROSS BOTTOM\nWILL -4 POINTS', 32, 1).setOrigin(0.5)
         this.add.bitmapText(this.game.config.width * 0.5, 400, 'arcade', 'Back to Menu (Press S)', 32, 1).setOrigin(0.5)
 
